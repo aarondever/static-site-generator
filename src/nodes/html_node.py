@@ -1,3 +1,4 @@
+from collections.abc import Mapping, Sequence
 from typing import Optional, Self
 
 
@@ -7,8 +8,8 @@ class HTMLNode:
         self,
         tag: Optional[str] = None,
         value: Optional[str] = None,
-        children: Optional[list[Self]] = None,
-        props: Optional[dict[str, str]] = None,
+        children: Optional[Sequence[Self]] = None,
+        props: Optional[Mapping[str, str]] = None,
     ) -> None:
         self.tag = tag
         self.value = value
@@ -26,21 +27,3 @@ class HTMLNode:
 
     def __repr__(self) -> str:
         return f"tag: {self.tag}, value: {self.value}, children: {self.children}, props: {self.props}"
-
-
-class LeafNode(HTMLNode):
-
-    def __init__(
-        self, tag: Optional[str], value: str, props: dict[str, str] | None = None
-    ) -> None:
-        super().__init__(tag=tag, value=value, props=props)
-
-    def to_html(self) -> str:
-
-        if self.value is None:
-            raise ValueError("All leaf nodes must have a value.")
-
-        if self.tag is None:
-            return self.value
-
-        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
